@@ -359,7 +359,7 @@ directory of your project you can do something like this:
 ```sh
 mkdir libraries
 git submodule add https://github.com/alter-ego/drag-sort-listview.git libraries/drag-sort-listview
-echo "include ':libraries:drag-sort-listview:library'" >> ../settings.gradle
+echo "include ':libraries:drag-sort-listview:library'" >> settings.gradle
 ```
 Then add the following dependency to your build.gradle project:
 ```groovy
