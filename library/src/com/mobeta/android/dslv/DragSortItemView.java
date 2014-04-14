@@ -30,7 +30,7 @@ public class DragSortItemView extends ViewGroup {
 
         // always init with standard ListView layout params
         setLayoutParams(new AbsListView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
+                LayoutParams.FILL_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
         //setClipChildren(true);
