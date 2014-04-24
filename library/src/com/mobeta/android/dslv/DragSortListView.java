@@ -33,6 +33,7 @@ import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -439,6 +440,8 @@ public class DragSortListView extends ListView {
 
     private boolean mUseRemoveVelocity;
     private float mRemoveVelocityX = 0;
+
+    private View mDownView;
 
     public DragSortListView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -1499,13 +1502,14 @@ public class DragSortListView extends ListView {
     /**
      * Removes dragged item from the list. Calls RemoveListener.
      */
+    
     private void doRemoveItem(int which) {
         // must set to avoid cancelDrag being called from the DataSetObserver
         mDragState = REMOVING;
 
         // end it
         if (mRemoveListener != null) {
-            mRemoveListener.remove(which);
+            mRemoveListener.remove(which, mDownView);
         }
 
         destroyFloatView();
@@ -2102,7 +2106,25 @@ public class DragSortListView extends ListView {
         }
     }
 
+    
     protected boolean onDragTouchEvent(MotionEvent ev) {
+
+        Rect rect = new Rect();
+        int childCount = this.getChildCount();
+        int[] listViewCoords = new int[2];
+        this.getLocationOnScreen(listViewCoords);
+        int x = (int) ev.getRawX() - listViewCoords[0];
+        int y = (int) ev.getRawY() - listViewCoords[1];
+        View child;
+        for (int i = 0; i < childCount; i++) {
+            child = this.getChildAt(i);
+            child.getHitRect(rect);
+            if (rect.contains(x, y)) {
+                mDownView = child; // This is your down view
+                break;
+            }
+        }
+
         int action = ev.getAction() & MotionEvent.ACTION_MASK;
         switch (action) {
             case MotionEvent.ACTION_CANCEL:
@@ -2486,7 +2508,8 @@ public class DragSortListView extends ListView {
      *
      */
     public interface RemoveListener {
-        public void remove(int which);
+
+        public void remove(int which, View view);
     }
 
     public interface DragSortListener extends DropListener, DragListener, RemoveListener {

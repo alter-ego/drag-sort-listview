@@ -130,10 +130,10 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements
      * and ListView positions. The Cursor is unchanged. Retrieve
      * the current mapping with {@link getCursorPositions()}.
      *
-     * @see DragSortListView.RemoveListener#remove(int)
+     * @see DragSortListView.RemoveListener#remove(int, android.view.View)
      */
     @Override
-    public void remove(int which) {
+    public void remove(int which, View view) {
         int cursorPos = mListMapping.get(which, which);
         if (!mRemovedCursorPositions.contains(cursorPos)) {
             mRemovedCursorPositions.add(cursorPos);
