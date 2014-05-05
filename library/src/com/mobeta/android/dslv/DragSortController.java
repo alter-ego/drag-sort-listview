@@ -304,8 +304,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
 
         // We're only interested if the touch was on an
         // item that's not a header or footer.
-        if (touchPos != AdapterView.INVALID_POSITION && touchPos >= numHeaders
-                && touchPos < (count - numFooters)) {
+        if (touchPos != AdapterView.INVALID_POSITION && touchPos >= numHeaders && touchPos < (count - numFooters)) {
             final View item = mListView.getChildAt(touchPos - mListView.getFirstVisiblePosition());
             final int rawX = (int) ev.getRawX();
             final int rawY = (int) ev.getRawY();

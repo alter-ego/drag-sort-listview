@@ -7,19 +7,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 /**
- * Lightweight ViewGroup that wraps list items obtained from user's
- * ListAdapter. ItemView expects a single child that has a definite
- * height (i.e. the child's layout height is not MATCH_PARENT).
- * The width of
- * ItemView will always match the width of its child (that is,
- * the width MeasureSpec given to ItemView is passed directly
- * to the child, and the ItemView measured width is set to the
- * child's measured width). The height of ItemView can be anything;
- * the 
- * 
+ * Lightweight ViewGroup that wraps list items obtained from user's ListAdapter. ItemView expects a single child that has a definite height (i.e. the
+ * child's layout height is not MATCH_PARENT). The width of ItemView will always match the width of its child (that is, the width MeasureSpec given to
+ * ItemView is passed directly to the child, and the ItemView measured width is set to the child's measured width). The height of ItemView can be
+ * anything; the
  *
- * The purpose of this class is to optimize slide
- * shuffle animations.
+ *
+ * The purpose of this class is to optimize slide shuffle animations.
  */
 public class DragSortItemView extends ViewGroup {
 
@@ -29,9 +23,7 @@ public class DragSortItemView extends ViewGroup {
         super(context);
 
         // always init with standard ListView layout params
-        setLayoutParams(new AbsListView.LayoutParams(
-                LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+        setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         //setClipChildren(true);
     }
@@ -55,13 +47,12 @@ public class DragSortItemView extends ViewGroup {
         if (mGravity == Gravity.TOP) {
             child.layout(0, 0, getMeasuredWidth(), child.getMeasuredHeight());
         } else {
-            child.layout(0, getMeasuredHeight() - child.getMeasuredHeight(), 
-            		getMeasuredWidth(), getMeasuredHeight());
+            child.layout(0, getMeasuredHeight() - child.getMeasuredHeight(), getMeasuredWidth(), getMeasuredHeight());
         }
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {        
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height = MeasureSpec.getSize(heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
 
@@ -75,15 +66,14 @@ public class DragSortItemView extends ViewGroup {
 
         if (child.isLayoutRequested()) {
             // Always let child be as tall as it wants.
-            measureChild(child, widthMeasureSpec,
-                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+            measureChild(child, widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
         }
 
         if (heightMode == MeasureSpec.UNSPECIFIED) {
-            ViewGroup.LayoutParams lp = getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = getLayoutParams();
 
-            if (lp.height > 0) {
-                height = lp.height;
+            if (layoutParams.height > 0) {
+                height = layoutParams.height;
             } else {
                 height = child.getMeasuredHeight();
             }
@@ -91,5 +81,4 @@ public class DragSortItemView extends ViewGroup {
 
         setMeasuredDimension(width, height);
     }
-
 }
