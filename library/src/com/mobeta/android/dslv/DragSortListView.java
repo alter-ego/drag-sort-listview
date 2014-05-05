@@ -412,14 +412,11 @@ public class DragSortListView extends ListView {
         int dropAnimDuration = defaultDuration; // ms
 
         if (attrs != null) {
-            TypedArray a = getContext().obtainStyledAttributes(attrs,
-                    R.styleable.DragSortListView, 0, 0);
+            TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.DragSortListView, 0, 0);
 
-            mItemHeightCollapsed = Math.max(1, a.getDimensionPixelSize(
-                    R.styleable.DragSortListView_collapsed_height, 1));
+            mItemHeightCollapsed = Math.max(1, a.getDimensionPixelSize(R.styleable.DragSortListView_collapsed_height, 1));
 
-            mTrackDragSort = a.getBoolean(
-                    R.styleable.DragSortListView_track_drag_sort, false);
+            mTrackDragSort = a.getBoolean(R.styleable.DragSortListView_track_drag_sort, false);
 
             if (mTrackDragSort) {
                 mDragSortTracker = new DragSortTracker();
@@ -431,65 +428,32 @@ public class DragSortListView extends ListView {
 
             mDragEnabled = a.getBoolean(R.styleable.DragSortListView_drag_enabled, mDragEnabled);
 
-            mSlideRegionFrac = Math.max(0.0f,
-                    Math.min(1.0f, 1.0f - a.getFloat(
-                            R.styleable.DragSortListView_slide_shuffle_speed,
-                            0.75f))
-            );
+            mSlideRegionFrac = Math.max(0.0f, Math.min(1.0f, 1.0f - a.getFloat(R.styleable.DragSortListView_slide_shuffle_speed, 0.75f)));
 
             mAnimate = mSlideRegionFrac > 0.0f;
 
-            float frac = a.getFloat(
-                    R.styleable.DragSortListView_drag_scroll_start,
-                    mDragUpScrollStartFrac);
+            float frac = a.getFloat(R.styleable.DragSortListView_drag_scroll_start, mDragUpScrollStartFrac);
 
             setDragScrollStart(frac);
 
-            mMaxScrollSpeed = a.getFloat(
-                    R.styleable.DragSortListView_max_drag_scroll_speed,
-                    mMaxScrollSpeed);
+            mMaxScrollSpeed = a.getFloat(R.styleable.DragSortListView_max_drag_scroll_speed, mMaxScrollSpeed);
 
-            removeAnimDuration = a.getInt(
-                    R.styleable.DragSortListView_remove_animation_duration,
-                    removeAnimDuration);
+            removeAnimDuration = a.getInt(R.styleable.DragSortListView_remove_animation_duration, removeAnimDuration);
 
-            dropAnimDuration = a.getInt(
-                    R.styleable.DragSortListView_drop_animation_duration,
-                    dropAnimDuration);
+            dropAnimDuration = a.getInt(R.styleable.DragSortListView_drop_animation_duration, dropAnimDuration);
 
-            boolean useDefault = a.getBoolean(
-                    R.styleable.DragSortListView_use_default_controller,
-                    true);
-
+            boolean useDefault = a.getBoolean(R.styleable.DragSortListView_use_default_controller, true);
             if (useDefault) {
-                boolean removeEnabled = a.getBoolean(
-                        R.styleable.DragSortListView_remove_enabled,
-                        false);
-                int removeMode = a.getInt(
-                        R.styleable.DragSortListView_remove_mode,
-                        DragSortController.FLING_REMOVE);
-                boolean sortEnabled = a.getBoolean(
-                        R.styleable.DragSortListView_sort_enabled,
-                        true);
-                int dragInitMode = a.getInt(
-                        R.styleable.DragSortListView_drag_start_mode,
-                        DragSortController.ON_DOWN);
-                int dragHandleId = a.getResourceId(
-                        R.styleable.DragSortListView_drag_handle_id,
-                        0);
-                int flingHandleId = a.getResourceId(
-                        R.styleable.DragSortListView_fling_handle_id,
-                        0);
-                int clickRemoveId = a.getResourceId(
-                        R.styleable.DragSortListView_click_remove_id,
-                        0);
-                int bgColor = a.getColor(
-                        R.styleable.DragSortListView_float_background_color,
-                        Color.BLACK);
+                boolean removeEnabled = a.getBoolean(R.styleable.DragSortListView_remove_enabled, false);
+                int removeMode = a.getInt(R.styleable.DragSortListView_remove_mode, DragSortController.FLING_REMOVE);
+                boolean sortEnabled = a.getBoolean(R.styleable.DragSortListView_sort_enabled, true);
+                int dragInitMode = a.getInt(R.styleable.DragSortListView_drag_start_mode, DragSortController.ON_DOWN);
+                int dragHandleId = a.getResourceId(R.styleable.DragSortListView_drag_handle_id, 0);
+                int flingHandleId = a.getResourceId(R.styleable.DragSortListView_fling_handle_id, 0);
+                int clickRemoveId = a.getResourceId(R.styleable.DragSortListView_click_remove_id, 0);
+                int bgColor = a.getColor(R.styleable.DragSortListView_float_background_color, Color.BLACK);
 
-                DragSortController controller = new DragSortController(
-                        this, dragHandleId, dragInitMode, removeMode,
-                        clickRemoveId, flingHandleId);
+                DragSortController controller = new DragSortController(this, dragHandleId, dragInitMode, removeMode, clickRemoveId, flingHandleId);
                 controller.setRemoveEnabled(removeEnabled);
                 controller.setSortEnabled(sortEnabled);
                 controller.setBackgroundColor(bgColor);
@@ -507,13 +471,12 @@ public class DragSortListView extends ListView {
         if (removeAnimDuration > 0) {
             mRemoveAnimator = new RemoveAnimator(smoothness, removeAnimDuration);
         }
-        // mLiftAnimator = new LiftAnimator(smoothness, 100);
+
         if (dropAnimDuration > 0) {
             mDropAnimator = new DropAnimator(smoothness, dropAnimDuration);
         }
 
-        mCancelEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_CANCEL, 0f, 0f, 0f, 0f, 0, 0f,
-                0f, 0, 0);
+        mCancelEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_CANCEL, 0f, 0f, 0f, 0f, 0, 0f, 0f, 0, 0);
 
         // construct the dataset observer
         mObserver = new DataSetObserver() {
@@ -662,39 +625,37 @@ public class DragSortListView extends ListView {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            DragSortItemView v;
+            DragSortItemView dragSortItemView;
             View child;
             if (convertView != null) {
-                v = (DragSortItemView) convertView;
-                View oldChild = v.getChildAt(0);
+                dragSortItemView = (DragSortItemView) convertView;
+                View oldChild = dragSortItemView.getChildAt(0);
 
                 child = mAdapter.getView(position, oldChild, DragSortListView.this);
                 if (child != oldChild) {
-                    // shouldn't get here if user is reusing convertViews
-                    // properly
+                    // shouldn't get here if user is reusing convertViews properly
                     if (oldChild != null) {
-                        v.removeViewAt(0);
+                        dragSortItemView.removeViewAt(0);
                     }
-                    v.addView(child);
+                    dragSortItemView.addView(child);
                 }
             } else {
                 child = mAdapter.getView(position, null, DragSortListView.this);
                 if (child instanceof Checkable) {
-                    v = new DragSortItemViewCheckable(getContext());
+                    dragSortItemView = new DragSortItemViewCheckable(getContext());
                 } else {
-                    v = new DragSortItemView(getContext());
+                    dragSortItemView = new DragSortItemView(getContext());
                 }
-                v.setLayoutParams(new AbsListView.LayoutParams(
-                        ViewGroup.LayoutParams.FILL_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT));
-                v.addView(child);
+                dragSortItemView.setLayoutParams(
+                        new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                dragSortItemView.addView(child);
             }
 
             // Set the correct item height given drag state; passed
             // View needs to be measured if measurement is required.
-            adjustItem(position + getHeaderViewsCount(), v, true);
+            adjustItem(position + getHeaderViewsCount(), dragSortItemView, true);
 
-            return v;
+            return dragSortItemView;
         }
 
         @Override
@@ -713,8 +674,7 @@ public class DragSortListView extends ListView {
         final int dividerHeight = getDividerHeight();
 
         if (divider != null && dividerHeight != 0) {
-            final ViewGroup expItem = (ViewGroup) getChildAt(expPosition
-                    - getFirstVisiblePosition());
+            final ViewGroup expItem = (ViewGroup) getChildAt(expPosition - getFirstVisiblePosition());
             if (expItem != null) {
                 final int left = getPaddingLeft();
                 final int right = getWidth() - getPaddingRight();
@@ -929,8 +889,6 @@ public class DragSortListView extends ListView {
         int lastEdge = edge;
 
         int divHeight = getDividerHeight();
-
-        // Log.d("mobeta", "float mid="+mFloatViewMid);
 
         int itemPos = startPos;
         int itemTop = startTop;
@@ -2086,8 +2044,8 @@ public class DragSortListView extends ListView {
     }
 
     /**
-     * Start a drag of item at <code>position</code> using the registered FloatViewManager. Calls through to {@link #startDrag(int, View, int, int, int)}
-     * after obtaining the floating View from the FloatViewManager.
+     * Start a drag of item at <code>position</code> using the registered FloatViewManager. Calls through to {@link #startDrag(int, View, int, int,
+     * int)} after obtaining the floating View from the FloatViewManager.
      *
      * @param position  Item to drag.
      * @param dragFlags Flags that restrict some movements of the floating View. For example, set <code>dragFlags |= ~{@link #DRAG_NEG_X}</code> to
