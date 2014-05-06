@@ -402,8 +402,6 @@ public class DragSortListView extends ListView {
 
     private float mRemoveVelocityX = 0;
 
-    private View mDownView;
-
     public DragSortListView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -1413,13 +1411,23 @@ public class DragSortListView extends ListView {
     /**
      * Removes dragged item from the list. Calls RemoveListener.
      */
-    private void doRemoveItem(int which) {
+    private void doRemoveItem(int position) {
         // must set to avoid cancelDrag being called from the DataSetObserver
         mDragState = REMOVING;
 
         // end it
         if (mRemoveListener != null) {
-            mRemoveListener.remove(which, mDownView);
+
+            int firstPosition = this.getFirstVisiblePosition() - this.getHeaderViewsCount(); // This is the same as child #0
+            int wantedChild = position - firstPosition;
+
+            if (wantedChild < 0 || wantedChild >= this.getChildCount()) {
+                // Unable to get view for desired position, because it's not being displayed on screen."
+                return;
+            }
+            View view = this.getChildAt(wantedChild);
+
+            mRemoveListener.remove(position, view);
         }
 
         destroyFloatView();
@@ -2004,23 +2012,6 @@ public class DragSortListView extends ListView {
     }
 
     protected boolean onDragTouchEvent(MotionEvent ev) {
-
-        Rect rect = new Rect();
-        int childCount = this.getChildCount();
-        int[] listViewCoords = new int[2];
-        this.getLocationOnScreen(listViewCoords);
-        int x = (int) ev.getRawX() - listViewCoords[0];
-        int y = (int) ev.getRawY() - listViewCoords[1];
-        View child;
-        for (int i = 0; i < childCount; i++) {
-            child = this.getChildAt(i);
-            child.getHitRect(rect);
-            if (rect.contains(x, y)) {
-                mDownView = child; // This is your down view
-                break;
-            }
-        }
-
         int action = ev.getAction() & MotionEvent.ACTION_MASK;
         switch (action) {
             case MotionEvent.ACTION_CANCEL:
