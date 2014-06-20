@@ -26,7 +26,6 @@ import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -663,7 +662,13 @@ public class DragSortListView extends ListView {
 
         @Override
         public void unregisterDataSetObserver(DataSetObserver observer) {
-            mAdapter.unregisterDataSetObserver(observer);
+            try {
+                mAdapter.unregisterDataSetObserver(observer);
+            } catch (IllegalStateException ise) {
+                // Prevent
+                // AbsListView$AdapterDataSetObserver@430e55c8 was not registered
+                // to crash the app
+            }
         }
     }
 
