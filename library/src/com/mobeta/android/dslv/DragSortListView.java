@@ -27,6 +27,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -49,6 +50,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * ListView subclass that mediates drag and drop resorting of items.
@@ -1432,6 +1434,12 @@ public class DragSortListView extends ListView {
             }
             View view = this.getChildAt(wantedChild);
 
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                view.setId(generateViewId());
+            } else {
+                view.setId(View.generateViewId());
+            }
+
             mRemoveListener.remove(position, view);
         }
 
@@ -1445,6 +1453,27 @@ public class DragSortListView extends ListView {
             mDragState = STOPPED;
         } else {
             mDragState = IDLE;
+        }
+    }
+
+    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+
+    /**
+     * Generate a value suitable for use in {@link #setId(int)}. This value will not collide with ID values generated at build time by aapt for R.id.
+     *
+     * @return a generated ID value
+     */
+    public static int generateViewId() {
+        for (; ; ) {
+            final int result = sNextGeneratedId.get();
+            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+            int newValue = result + 1;
+            if (newValue > 0x00FFFFFF) {
+                newValue = 1; // Roll over to 1, not 0.
+            }
+            if (sNextGeneratedId.compareAndSet(result, newValue)) {
+                return result;
+            }
         }
     }
 
